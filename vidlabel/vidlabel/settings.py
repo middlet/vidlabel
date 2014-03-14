@@ -26,6 +26,11 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# template directories
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'browser', 'templates'),
+)
+
 
 # Application definition
 

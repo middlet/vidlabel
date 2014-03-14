@@ -5,7 +5,7 @@
 # config options
 ip = '10.0.0.53'
 hostname = 'vidlabel'
-ram = '512'
+ram = '1024'
 
 # provision script
 $script = <<SCRIPT
@@ -19,7 +19,7 @@ then
     sudo bash -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/pgdg.list"
     sudo apt-get -qq update
 fi
-sudo apt-get install -y -qq postgresql-$PG_VERSION postgresql-$PG_VERSION-postgis
+sudo apt-get install -y -qq postgresql
 sudo apt-get install -y -qq libpq-dev
 sudo pip3 install -q psycopg2
 sed -i -e "s/;32m/;35m/" .bashrc
