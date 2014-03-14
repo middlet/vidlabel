@@ -10,5 +10,20 @@
         <div class="page-header">
 	       <h1>hacky video annotation tool</h1>
         </div>
+
+        <h3>select a video to analyse</h3>
+        <select class="form-control">
+        <option>--</option>
+        {% for di in directories %}<option>{{ di }}</option>{% endfor %}
+        </select>
+
+        <h3>select frame</h3>
+        <select class="form-control">
+        <option>--</option>
+        {% for fi in nfiles %}<option>{{ fi }}</option>{% endfor %}
+        </select>
+
+
+
     </div>
 </body>
