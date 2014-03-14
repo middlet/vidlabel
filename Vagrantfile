@@ -24,6 +24,7 @@ sudo apt-get install -y -qq libpq-dev
 sudo pip3 install -q psycopg2
 sed -i -e "s/;32m/;35m/" .bashrc
 sed -i -e "s/\#force/force/" .bashrc
+sudo locale-gen en_GB.UTF-8
 SCRIPT
 
 Vagrant.configure("2") do |config|
