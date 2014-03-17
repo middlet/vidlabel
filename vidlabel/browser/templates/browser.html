@@ -3,7 +3,6 @@
     <title>hvat</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -12,18 +11,70 @@
         </div>
 
         <h3>select a video to analyse</h3>
-        <select class="form-control">
+        <select class="form-control" id="vidname">
         <option>--</option>
         {% for di in directories %}<option>{{ di }}</option>{% endfor %}
         </select>
 
         <h3>select frame</h3>
-        <select class="form-control">
-        <option>--</option>
-        {% for fi in nfiles %}<option>{{ fi }}</option>{% endfor %}
+        <select class="form-control" id="framenum">
         </select>
+
+        <h3>annotate frame</h3>
+        <img id="image"/>
+
+
 
 
 
     </div>
+    <!-- javascript loaded at end -->
+    <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+$(document).ready(function() {
+    var nframes = [{% for fi in nfiles%}{{fi}}{% if not forloop.last %},{% endif %}{% endfor %}];
+    $('#vidname').change(function() {
+        var name = $(this).val();
+        if (name!="--") {
+            var ind = $('#vidname option:selected').index()-1;
+            $('#framenum').html('');
+            for (var i=0; i<nframes[ind]; ++i) {
+                var fname = (1e4+(i+1)+'').substr(1)+'.jpg';
+                $('#framenum').append('<option>'+fname+'</option>');
+            }
+
+            var fname = $('#framenum option:selected').val();
+            $('#image').attr('src', '{{STATIC_URL}}data/'+name+'/'+fname);
+        }
+    });
+    $('#framenum').change(function() {
+        var fname = $(this).val();
+        var vidname = $('#vidname option:selected').val();
+        $('#image').attr('src', '{{STATIC_URL}}data/'+vidname+'/'+fname);
+    });
+    $('#image').click(function(e) {
+        var offset = $(this).offset();
+        var x = e.clientX-offset.left;
+        var y = e.clientY-offset.top;
+        mouseX = e.pageX;
+        mouseY = e.pageY
+        var color = '#00ff00';
+        var size = '2px';
+        $("body").append(
+            $('<div></div>')
+                .css('position', 'absolute')
+                .css('top', mouseY + 'px')
+                .css('left', mouseX + 'px')
+                .css('width', size)
+                .css('height', size)
+                .css('background-color', color)
+        );
+
+
+    });
+
+
+});
+    </script>
 </body>
