@@ -22,7 +22,7 @@
 
         <h3>annotate frame</h3>
         <img id="image"/>
-        <canvas id="canvas"></canvas>
+        <div id="canvas"></div>
 
 
 
@@ -32,14 +32,17 @@
     <!-- javascript loaded at end -->
     <script src="http://code.jquery.com/jquery.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
     <script>
-var canvas = $('#canvas')[0];
-var context = canvas.getContext("2d");
+//var canvas = $('#canvas')[0];
+//var context = canvas.getContext("2d");
 
 var points = [];
 
 $(document).ready(function() {
     var nframes = [{% for fi in nfiles%}{{fi}}{% if not forloop.last %},{% endif %}{% endfor %}];
+    var paper = new Raphael('canvas');
+
     $('#vidname').change(function() {
         var name = $(this).val();
         if (name!="--") {
@@ -51,37 +54,36 @@ $(document).ready(function() {
             }
 
             var fname = $('#framenum option:selected').val();
-            updateImage(fname);
+            updateImage(paper, fname);
         }
     });
     $('#framenum').change(function() {
         var fname = $(this).val();
-        updateImage(fname);
+        updateImage(paper, fname);
     });
     $('#canvas').click(function(e) {
         var rect = canvas.getBoundingClientRect();
         var cx = e.clientX - rect.left;
         var cy = e.clientY - rect.top;
-        context.beginPath();
-        context.arc(cx, cy, 3, 0, 2*Math.PI, false);
-        context.fillStyle = 'red';
-        context.fill();
-        context.lineWidth = 1;
-        context.strokeStyle = 'black';
-        context.stroke();
-        points.push({x:cx, y:cy});
+        var circ = paper.circle(cx, cy, 50)
+            .attr({fill: 'red', stroke: 'black'})
+            .click(function () {
+                console.log('clickked');
+                console.log(this);
+                this.node.remove();
+            });
     });
 });
 
-function updateImage(fname)
+function updateImage(paper, fname)
 {
+    paper.clear();
     var vidname = $('#vidname option:selected').val();
     var image = new Image();
     image.src = '{{STATIC_URL}}data/'+vidname+'/'+fname;
     image.onload = function() {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        context.drawImage(image, 0, 0);
+        paper.setSize(image.width, image.height);
+        paper.image(image.src, 0,0, image.width, image.height);
     }
 }
     </script>
